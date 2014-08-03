@@ -1,11 +1,21 @@
-// board size + padding
-var BOARD_WIDTH = 100;
-var BOARD_HEIGTH = 100;
+// **************************************************************//
+//              Marina Wahl - dev.mariwahl.us  - 2014            //
+//                    GAME OF LIFE IN JAVASCRIPT                 //
+//                                                               //
+//    Rules:                                                     //
+// 1. Start with a random configuration of dead or alive cells   //
+// 2. Loneliness: any cell with less than 2 neighbors will die   //
+// 3. Overcrowd: any cell with more than 3 neighbors will die    //
+// 4. Optimized: any cell with 3 neighbors will grow             //
+//                                                               //
+// **************************************************************//
 
-// this generation_cells allow padding around the board, so we can
-// safely verify before/after cells
-var this_generation_cells = [];
-var last_generation_cells = [];
+
+// ***************************************************************//
+//                                                                //
+//                       FUNCTIONS                                //
+//                                                                //
+// ***************************************************************//
 
 
 
@@ -25,20 +35,22 @@ function clearBoard() {
 
 function printBoard(){
 // Print the board in the screen
-// TODO: make it blocks!
   for (var i=1; i < BOARD_WIDTH; i++){
     for (var j=1; j < BOARD_HEIGTH; j++){
-      //console.log(cells[i][j] + "  " );
+      shift_i = i*SIZE_CELL;
+      shift_j = j*SIZE_CELL;
+      context.beginPath();
       if (this_generation_cells[i][j] == 1){
-        document.write("#" + " ");
+        context.fillStyle = CELL_COLOR;
+        context.fillRect(shift_i,shift_j,SIZE_CELL,SIZE_CELL);
       } else {
-        document.write("_" + " ");
+        context.fillStyle = BACKGROUND_COLOR;
+        context.fillRect(shift_i,shift_j,SIZE_CELL,SIZE_CELL);
       }
     }
-    document.write('<br>');
-    //console.log('\n');
+    context.closePath();
+    context.fill();
   }
-  document.write('<br><br>');
 }
 
 
@@ -46,7 +58,8 @@ function printBoard(){
 
 function startFirstGeneration(){
   clearBoard();
-  // (Pseudo-)Randomly start the first generation
+  // (Pseudo-)Randomly start the first generation with dead and
+  // alive cells
   for (var i=1; i < BOARD_WIDTH; i++){
     for (var j=1; j < BOARD_HEIGTH; j++){
       var alive_or_dead = Math.floor( Math.random()*2) ;
@@ -61,7 +74,6 @@ function startFirstGeneration(){
 function startNewGeneration(){
   // apply the rules for the next generation
   applyRules();
-
    // make it permanent
   for (var i=0; i < BOARD_WIDTH; i++){
     for (var j=0; j < BOARD_HEIGTH; j++){
@@ -74,9 +86,9 @@ function startNewGeneration(){
 
 
 
-
 function applyRules(){
-  // Apply the Game of Life rules
+  // Apply the Game of Life rules, checking all the 8
+  // neighbors for each cell
   for (var i=1; i < BOARD_WIDTH; i++){
     for (var j=1; j < BOARD_HEIGTH; j++){
       var count = this_generation_cells[i][j-1];
@@ -102,23 +114,53 @@ function applyRules(){
 
 
 
-// Play the Game!
+
+// ***************************************************************//
+//                                                                //
+//                GLOBAL VARIABLES                                //
+//                                                                //
+// ***************************************************************//
+
+// board size + padding
+var BOARD_WIDTH = 800;
+var BOARD_HEIGTH = 400;
+
+// how will it look in the screen
+var SIZE_CELL = 5;
+var BACKGROUND_COLOR = "#FFFFFF";
+var CELL_COLOR = "#009933";
+var TIME = 60;
+
+// this generation_cells allow padding around the board, so we can
+// safely verify before/after cells
+var this_generation_cells = [];
+var last_generation_cells = [];
+
+
+
+
+// ***************************************************************//
+//                                                                //
+//                THE GAME STARTS HERE                            //
+//                                                                //
+// ***************************************************************//
+
 startFirstGeneration();
-printBoard();
-var i = 0;
-while (i < 5000){
-  startNewGeneration();
-  if (i%20 == 0){
-    printBoard();
-  }
-  i += 1;
+
+// create html canvas
+var a_canvas = document.getElementById("a");
+if(a_canvas.getContext) {
+  var context = a_canvas.getContext('2d');
 }
 
 
+function startGame(){
+   setInterval(function(){
+      startNewGeneration();
+      printBoard();
+    },
+  TIME);
+}
 
-
-
-
-
-
-
+// Play the Game!!!!
+startGame();
