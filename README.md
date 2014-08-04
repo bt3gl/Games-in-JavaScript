@@ -1,6 +1,7 @@
-Conway's Game Of Life
-=====================
+Games in JavaScript
+====================
 
 
 
-[Game of Life in JavaScript. ](http://bit.ly/game-of-l1f3)
+[Conway's Game of Life. ](http://bit.ly/game-of-l1f3)
+
