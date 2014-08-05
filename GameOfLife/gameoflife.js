@@ -121,7 +121,7 @@ function applyRules() {
 //                                                                //
 // ***************************************************************//
 
-// board size + padding
+// board size + padding  --> to do: make this an option!
 var BOARD_WIDTH = 600;
 var BOARD_HEIGTH = 300;
 
