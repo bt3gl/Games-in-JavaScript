@@ -214,5 +214,5 @@ function startASCIIGame() {
 
 
 
-startGraphicGame();
+
 //startASCIIGame();

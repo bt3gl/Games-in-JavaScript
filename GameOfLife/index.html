@@ -11,7 +11,15 @@
     <h1>Conway's Game of Life</h1>
 
 
+    <p>
+        <button type="button" onclick="startGraphicGame()">Start</button>
+        <button type="button" onclick="clearBoard()">Stop</button>
+    </p>
+
     <div id="content" align=center>
+        <canvas id="game">
+            This text is displayed if your browser does not support HTML5 Canvas.
+        </canvas>
         <script type='text/javascript' src='gameoflife.js'></script>
     </div>
 
