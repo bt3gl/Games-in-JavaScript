@@ -19,12 +19,13 @@ var Battleship = {
     cells_guesses : [],
     cells_ships : [],
     gameover : false,
-    ships_left : this.NUMBER_SHIPS_3 + this.NUMBER_SHIPS_2,
+    ships_left : this.NUMBER_SHIPS_3*3 + this.NUMBER_SHIPS_2*2,
     guesses_left : this.BOARD_WIDTH + this.BOARD_HEIGTH,
 
 
     clearBoard : function() {
         // Fills the board with 0S
+        // (just clean the board for a new game)
         for (var i = 0; i < this.BOARD_WIDTH; i++) {
             this.cells_guesses[i] = [];
             this.cells_ships [i]= [];
@@ -39,6 +40,11 @@ var Battleship = {
 
     generateShips : function(){
         // create (pseudo)-random ships
+        // TODO: need to make the landscape works or
+        // find a better way to be randm
+        // TODO: is there a smarter way of doing this without
+        // using so many ifs??? maybe case/switch?
+        this.clearBoard();
         var k = this.NUMBER_SHIPS_3;
         landscape = true;
         while (k > 0){
@@ -84,7 +90,8 @@ var Battleship = {
 
 
 
-    printBoardEmpty : function(){
+    printBoardAscII: function(){
+        // print the board in ascii -> for debug only
         for (var i = 0; i < this.BOARD_WIDTH; i++) {
             for (var j = 0; j < this.BOARD_HEIGTH; j++) {
                 document.write(this.cells_ships[i][j]);
@@ -95,28 +102,66 @@ var Battleship = {
     },
 
 
-
-    gameOverMsg: function(msg){
-        if (msg == "winner"){
-            document.write("Congrats!!!");
-        }else if (msg == "loser"){
-            document.write("I'm sorry, you lost!");
+    printBoardPixel : function(i, j) {
+        // final game printing
+        // todo: this function needs work,
+        // write the coordinate numbers
+        if (this.cells_ships[i][j] != 0) {
+            shift_i = i * this.SIZE_CELL;
+            shift_j = j * this.SIZE_CELL;
+            context.beginPath();
+            context.fillStyle = CELL_COLOR;
+            context.fillRect(shift_i, shift_j, SIZE_CELL, SIZE_CELL);
+            context.closePath();
+            context.fill();
+            return true;
+        } else {
+            return false;
         }
     },
 
 
+
+    gameOverMsg: function(msg){
+        // Finishes the game
+        // TODO: make better messages and
+        // ask if want to play again
+        if (msg == "winner"){
+            alert("Congrats!!!");
+        }else if (msg == "loser"){
+            alert("I'm sorry, you lost!");
+        }
+    },
+
+
+    checkGuess: function(guess_x, guess_y){
+        // check if the guess is good
+        // TODO: if finishes the ship, should be able
+        // to say "sink sunk or something"
+        if (this.cells_ships[guess_x][guess_y] > 0){
+            this.ships_left --;
+        }
+    },
+
     getGuess : function(){
-       var guess = prompt("Say some coordinate");
-       if g
-
-
+        // get user's guest
+        // TODO: any other better way than the annoying
+        // prompt????
+        var guess_x = prompt("Guess a x coordinate:");
+        var guess_y = prompt("Now, guess a y coordinate:");
+        this.guesses_left --;
+        console.log(this.guesses_left);
+        this.checkGuess(guess_x, guess_y);
     },
 
 
     startGame : function() {
-        this.clearBoard();
+        // the game runs here
+        // TODO: is this loop ok???
+        // TODO: is the gameover checking ok???
         this.generateShips();
-        this.printBoardEmpty();
+        this.printBoardAscII();
+        //this.printBoardPixel();
         while (this.gameover != true){
             this.getGuess();
             if (this.ships_left == 0){
